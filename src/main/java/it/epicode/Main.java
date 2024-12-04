@@ -2,14 +2,12 @@ package it.epicode;
 
 
 import com.github.javafaker.Faker;
-import it.epicode.eventi.Evento;
-import it.epicode.eventi.EventoDAO;
-import it.epicode.eventi.Location;
-import it.epicode.eventi.LocationDAO;
+import it.epicode.eventi.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+import java.time.LocalDate;
 import java.util.Locale;
 
 public class Main {
@@ -25,6 +23,8 @@ public class Main {
 
             EventoDAO eventoDAO = new EventoDAO(em);
             LocationDAO locationDAO = new LocationDAO(em);
+            PersonaDAO personaDAO = new PersonaDAO(em);
+            PartecipazioneDAO partecipazioneDAO = new PartecipazioneDAO(em);
         try {
 
 
@@ -45,8 +45,29 @@ public class Main {
 
             eventoDAO.insertEvento(evento);
 
-            System.out.println(eventoDAO.getById(1L));
-//            eventoDAO.delete(1L);
+            Persona persona = new Persona();
+            persona.setNome("pino");
+            persona.setCognome("trm");
+            persona.setEmail("utrimao@gmail.com");
+            persona.setSesso("m");
+            persona.setDataDiNascita(LocalDate.of(2003,3,18));
+
+            personaDAO.insertPersona(persona);
+
+            Partecipazione partecipazione = new Partecipazione();
+            partecipazione.setEvento(evento);
+            partecipazione.setPersona(persona);
+            partecipazione.setStato(Partecipazione.StatoPartecipazione.CONFERMATA);
+
+            partecipazioneDAO.insertPartecipazione(partecipazione);
+
+            em.getTransaction().begin();
+            persona.setPartecipazioni(partecipazione);
+            em.persist(persona);
+            em.getTransaction().commit();
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

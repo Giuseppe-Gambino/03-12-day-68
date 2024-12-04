@@ -2,18 +2,19 @@ package it.epicode.eventi;
 
 import jakarta.persistence.EntityManager;
 
-public class PersonaDAO {
+public class PartecipazioneDAO {
 
     private EntityManager em;
 
-    public PersonaDAO(EntityManager em) {
+    public PartecipazioneDAO(EntityManager em) {
         this.em = em;
     }
 
-    public void insertPersona(Persona persona) {
+    public void insertPartecipazione(Partecipazione partecipazione) {
+
 
         em.getTransaction().begin();
-        em.persist(persona);
+        em.persist(partecipazione);
         em.getTransaction().commit();
     }
 }
