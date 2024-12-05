@@ -1,4 +1,4 @@
-package it.epicode.eventi;
+package it.epicode.entity;
 
 
 import jakarta.persistence.*;

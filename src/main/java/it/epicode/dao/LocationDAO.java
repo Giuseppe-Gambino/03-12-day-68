@@ -1,5 +1,6 @@
-package it.epicode.eventi;
+package it.epicode.dao;
 
+import it.epicode.entity.Location;
 import jakarta.persistence.EntityManager;
 
 public class LocationDAO {

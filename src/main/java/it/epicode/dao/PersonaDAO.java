@@ -1,5 +1,6 @@
-package it.epicode.eventi;
+package it.epicode.dao;
 
+import it.epicode.entity.Persona;
 import jakarta.persistence.EntityManager;
 
 public class PersonaDAO {

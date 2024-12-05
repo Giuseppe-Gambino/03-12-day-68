@@ -1,11 +1,12 @@
-package it.epicode.eventi;
+package it.epicode.entity;
 
 import jakarta.persistence.*;
 
 
 
 @Entity
-@Table(name="evento")
+@Table(name="eventi")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Evento {
 
     @Id
@@ -28,7 +29,7 @@ public class Evento {
     @Column(name = "numero_massimo_di_partecipanti")
     private Integer numeroMassimoDiPartecipanti;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "location_id", nullable = false)
     private Location location;
 

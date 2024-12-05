@@ -2,7 +2,8 @@ package it.epicode;
 
 
 import com.github.javafaker.Faker;
-import it.epicode.eventi.*;
+import it.epicode.dao.*;
+import it.epicode.entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -15,56 +16,82 @@ public class Main {
 
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("util-jpa");
 
+
         Faker faker = new Faker(new Locale("it"));
 
         EntityManager em = emf.createEntityManager();
 
 
-
-            EventoDAO eventoDAO = new EventoDAO(em);
+        ConcertoDAO concertoDAO = new ConcertoDAO(em);
             LocationDAO locationDAO = new LocationDAO(em);
+            EventoDAO eventoDAO = new EventoDAO(em);
+
             PersonaDAO personaDAO = new PersonaDAO(em);
-            PartecipazioneDAO partecipazioneDAO = new PartecipazioneDAO(em);
+            PartitaDiCalcioDAO partitaDiCalcioDAO = new PartitaDiCalcioDAO(em);
+
         try {
 
 
             Location location = new Location();
-            location.setCitta("Ravanusa");
+            location.setCitta("Napoli");
             location.setNome("piazza minghetti");
 
             locationDAO.insertLocation(location);
 
 
-            Evento evento = new Evento();
-            evento.setTitolo("Trimone");
-            evento.setDataEvento("2022-12-03");
-            evento.setDescrizione("Siuumm");
-            evento.setTipoEvento("Conferenza bona");
-            evento.setNumeroMassimoDiPartecipanti(175);
-            evento.setLocation(location);
+            for (int i = 0; i < 10; i++) {
 
-            eventoDAO.insertEvento(evento);
 
-            Persona persona = new Persona();
-            persona.setNome("pino");
-            persona.setCognome("trm");
-            persona.setEmail("utrimao@gmail.com");
-            persona.setSesso("m");
-            persona.setDataDiNascita(LocalDate.of(2003,3,18));
+                Concerto concerto = new Concerto();
+                concerto.setTitolo(faker.esports().league());
+                concerto.setDataEvento("2022-12-03");
+                concerto.setDescrizione(faker.demographic().race());
+                concerto.setTipoEvento(faker.artist().name());
+                concerto.setNumeroMassimoDiPartecipanti(faker.number().randomDigit());
+                concerto.setLocation(location);
+                concerto.setGenere(Genere.POP);
+                concerto.setInStreaming(faker.bool().bool());
 
-            personaDAO.insertPersona(persona);
 
-            Partecipazione partecipazione = new Partecipazione();
-            partecipazione.setEvento(evento);
-            partecipazione.setPersona(persona);
-            partecipazione.setStato(Partecipazione.StatoPartecipazione.CONFERMATA);
+                concertoDAO.save(concerto);
 
-            partecipazioneDAO.insertPartecipazione(partecipazione);
+                Persona persona = new Persona();
+                persona.setNome(faker.name().name());
+                persona.setCognome(faker.name().lastName());
+                persona.setEmail(faker.internet().emailAddress());
+                persona.setSesso("m");
+                persona.setDataDiNascita(LocalDate.of(2003,3,18));
 
-            em.getTransaction().begin();
-            persona.setPartecipazioni(partecipazione);
-            em.persist(persona);
-            em.getTransaction().commit();
+
+                personaDAO.insertPersona(persona);
+
+
+                String squad1 = faker.name().name();
+                String squad2 = faker.name().name();
+
+
+                PartitaDiCalcio partitaDiCalcio = new PartitaDiCalcio();
+                partitaDiCalcio.setSquadraDiCasa(squad1);
+                partitaDiCalcio.setSquadraOspite(squad2);
+                partitaDiCalcio.setSquadraVincente(squad1);
+                partitaDiCalcio.setNumeroDiGolSquadraDiCasa(faker.number().randomDigit());
+                partitaDiCalcio.setNumeroDiGolSquadraOspite(faker.number().randomDigit());
+                partitaDiCalcio.setTitolo(faker.esports().event());
+                partitaDiCalcio.setDataEvento("2022-12-03");
+                partitaDiCalcio.setDescrizione(faker.demographic().race());
+                partitaDiCalcio.setTipoEvento(faker.artist().name());
+                partitaDiCalcio.setNumeroMassimoDiPartecipanti(faker.number().randomDigit());
+                partitaDiCalcio.setLocation(location);
+
+                partitaDiCalcioDAO.save(partitaDiCalcio);
+
+            }
+
+            System.out.println(partitaDiCalcioDAO.getPartiteVinteInCasa());
+            System.out.println(partitaDiCalcioDAO.getPartiteVinteInTrasferta());
+
+//            eventoDAO.stampConcertiInStreaming(true);
+            System.out.println(eventoDAO.getConcertiPerGenere(Genere.POP));
 
 
 

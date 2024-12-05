@@ -1,11 +1,10 @@
-package it.epicode.eventi;
+package it.epicode.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name = "Persona")
